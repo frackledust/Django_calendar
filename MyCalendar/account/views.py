@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from .models import Event, Mission, Category
-from .forms import MissionForm
+from .models import Event, Mission, Category, Goal
+from .forms import MissionForm, GoalForm
+from django.views.generic import UpdateView
 
 
 def index(request):
@@ -28,3 +29,42 @@ def add_mission(request, id):
             mission = Mission(event=event, text=text, category=category)
             mission.save()
     return redirect('event', id=id)
+
+
+def goalsView(request):
+    context = {}
+    context['goals'] = Goal.objects.filter(owner=request.user)
+
+    return render(request, 'account/goals.html', context)
+
+
+def goalFormView(request):
+    context = {}
+    context['goal_form'] = GoalForm()
+    if "goal" in request.GET:
+        goal = Goal.objects.filter(goal_id=request.GET['goal']).first()
+        info = {'title': goal.title, 'description': goal.description, 'category': goal.category}
+        context['goal_form'] = GoalForm(info)
+
+    return render(request, 'account/goal_form.html', context)
+
+
+def add_goal(request):
+    if request.method == 'POST':
+        goal_form = GoalForm(request.POST)
+        if goal_form.is_valid():
+            title = goal_form.cleaned_data['title']
+            goal = Goal.objects.filter(title=title).first()
+            if goal is None:
+                goal = Goal(owner=request.user, title=title)
+            goal.description = goal_form.cleaned_data['description']
+            goal.category = goal_form.cleaned_data['category']
+            goal.save()
+    return redirect('goals')
+
+
+def check_goal(request, id):
+    goal = Goal.objects.filter(goal_id=id).first()
+    goal.done = True
+    goal.save()
+    return redirect('goals')

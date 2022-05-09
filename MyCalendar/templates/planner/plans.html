@@ -1,0 +1,35 @@
+{% extends 'base.html' %} {% load widget_tweaks %} {% block content %}
+<br/>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+           <h1 class="login-heading mb-4 my-auto"> Plans: </h1>
+        </div>
+    </div>
+    </br>
+    <table class="row">
+        <table class="table">
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Start Date</th>
+              <th scope="col">End Date</th>
+              <th scope="col">End Date</th>
+            </tr>
+            {% for plan in plans %}
+            <tr>
+                <td> {{plan.name}}</td>
+                <td> {{plan.start_date}}</td>
+                <td> {{plan.end_date}}</td>
+                <td>
+                    <a href="{% url 'plan' plan.plan_id %}">
+                    <button class="btn btn-lg btn-outline-secondary btn-login btn-block text-uppercase font-weight-bold mb-2"> Details </button>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+            </div>
+        </table>
+    </div>
+    </br>
+</div>
+{% endblock content %}

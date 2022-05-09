@@ -17,7 +17,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from account import views
+# from account import views
 
 from user import views as user_views
 from MyCalendar import settings
@@ -26,10 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('user.urls')),
     path('', include('planner.urls')),
-
-    path('', views.index, name='index'),
-    path('event/<int:id>/', views.event, name='event'),
-    path('event/<int:id>/add_mission', views.add_mission, name='add_mission'),
+    path('', include('account.urls')),
 ]
 
 if settings.DEBUG:

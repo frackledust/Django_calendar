@@ -1,0 +1,56 @@
+{% extends 'base.html' %} {% load widget_tweaks %} {% block content %}
+<br/>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+           <h1 class="login-heading mb-4 my-auto"> My goals: </h1>
+        </div>
+        <div class="col-md-1">
+            <a href="{% url 'goal_form' %}">
+                <button class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2">Add New!</button>
+            </a>
+        </div>
+    </div>
+    </br>
+    <div class="row">
+        <div class="col-md-3">
+        <h2 class="h3 my-auto"> Working on: </h2>
+            </br>
+            <div>
+                    {% for goal in goals %}
+                    {% if goal.done == False %}
+                    <ul class="list-group col-md-12">
+                        <li class="list-group-item ml-3">
+                            <div class="float-right">
+                                <a type="button" class="btn btn-sm btn-outline-primary" href="{% url 'check_goal' goal.goal_id %}">Done</a>
+                                <a type="button" class="btn btn-sm btn-outline-secondary" href="{% url 'goal_form' %}?goal={{goal.goal_id}}">Show</a>
+                            </div>
+
+                            {{goal.category }} - {{goal.title}}
+                        </li>
+                    </ul>
+                {% endif %}
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+    </br>
+    <div class="row">
+        <div class="col-md-3">
+        <h2 class="h3 my-auto"> Done: </h2>
+            </br>
+            <div>
+                    {% for goal in goals %}
+                    {% if goal.done == True %}
+                    <ul class="list-group col-md-12">
+                        <li class="list-group-item ml-3">
+                            {{goal.done }} - {{goal.title}}
+                        </li>
+                    </ul>
+                {% endif %}
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

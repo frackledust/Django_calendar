@@ -1,9 +1,9 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import Q
 
-from .forms import PlannerForm, PlannerEditForm, PlanCreateForm
-from .models import Planner
+from .forms import PlannerForm, PlannerEditForm, PlanCreateForm, ItemForm
+from .models import Planner, Plan
 from .serializers import PlannerSerializer, PlanSerializer
 
 
@@ -67,6 +67,24 @@ def homeView(request):
         context["plans"] = PlanSerializer(planner.plan_set.all(), many=True).data
 
     context["plan_createform"] = createPlanForm
-
     return render(request, 'planner/home.html', context)
 
+
+@login_required
+def plansView(request, id):
+    context = {}
+    planner = Planner.objects.get(planner_id=id)
+    context["plans"] = planner.plan_set.all()
+    return render(request, 'planner/plans.html', context)
+
+@login_required
+def planView(request, id):
+    context = {}
+    plan = Plan.objects.get(plan_id=id)
+    context["plan"] = plan
+    context["create_item"] = ItemForm()
+    return render(request, 'planner/plan.html', context)
+
+@login_required
+def add_item(request, id):
+    return redirect('plan', id=id)

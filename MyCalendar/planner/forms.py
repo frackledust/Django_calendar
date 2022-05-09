@@ -2,7 +2,7 @@ from django import forms
 from django.db.models import Q
 
 from user.models import MyUser
-from .models import Planner, Plan
+from .models import Planner, Plan, Item
 
 
 class PlannerForm(forms.ModelForm):
@@ -96,12 +96,10 @@ class PlanCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(PlanCreateForm, self).__init__(*args, **kwargs)
-        print("here")
         if self.initial:
             # get planners from user as choices for planners
             user_id = self.initial["user_id"]
             choices = get_planners(user_id)
-            print(choices)
 
             self.fields["planner"] = forms.ChoiceField(choices=choices, required=True)
 
@@ -115,22 +113,7 @@ class PlanCreateForm(forms.ModelForm):
         exclude = []
 
 
-# class PlanCreateForm(forms.ModelForm):
-#     plan_id = forms.CharField(required=True)
-#     start_date = forms.DateTimeField(input_formats=["%d.%m.%y %H:%M"], required=True)
-#     end_date = forms.DateTimeField(input_formats=["%d.%m.%y %H:%M"], required=False)
-#
-#     def save(self, commit=True):
-#         plan = Plan.objects.get(plan_id=self.cleaned_data["plan_id"])
-#         plan.name = self.cleaned_data["name"]
-#         plan.start_date = self.cleaned_data["start_date"]
-#         plan.end_date = self.cleaned_data["end_date"]
-#
-#         if commit:
-#             plan.save()
-#
-#         return plan
-#
-#     class Meta:
-#         model = Plan
-#         exclude = ["planner"]
+class ItemForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        exclude = []

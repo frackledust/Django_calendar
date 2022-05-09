@@ -1,5 +1,6 @@
 from django.db import models
 # Create your models here.
+from user.models import MyUser
 
 
 class Event(models.Model):
@@ -27,3 +28,14 @@ class Mission(models.Model):
 
     def __str__(self):
         return f'{self.id} - {self.event.name} ({self.text})'
+
+class Goal(models.Model):
+    goal_id = models.AutoField(primary_key=True)
+    owner = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    done = models.BooleanField(default=False)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return f'{self.goal_id} - {self.title}'
