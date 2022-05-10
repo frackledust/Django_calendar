@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 
 from .forms import PlannerForm, PlannerEditForm, PlanCreateForm, ItemForm
-from .models import Planner, Plan
+from .models import Planner, Plan, Item
 from .serializers import PlannerSerializer, PlanSerializer
 
 
@@ -45,7 +45,7 @@ def homeView(request):
         if request.POST['action'] == 'create_plan':
             form = PlanCreateForm(request.POST)
             if form.is_valid():
-                form.set_planner(selected_planner)
+                # form.set_planner(selected_planner)
                 form.save()
                 createPlanForm = PlanCreateForm()
             else:
@@ -73,18 +73,52 @@ def homeView(request):
 @login_required
 def plansView(request, id):
     context = {}
+
+    if request.POST:
+        if request.POST['delete']:
+            print(request.POST['delete'])
+            print(type(request.POST['delete']))
+
     planner = Planner.objects.get(planner_id=id)
-    context["plans"] = planner.plan_set.all()
+    context["plans"] = planner.plan_set.order_by('start_date')
+    context["planner_id"] = id
     return render(request, 'planner/plans.html', context)
 
 @login_required
-def planView(request, id):
+def planView(request, planner_id, plan_id):
+    if request.POST:
+        if 'item_id' in request.POST:
+            item_id = request.POST['item_id']
+            print(item_id)
+            item = Item.objects.get(item_id=item_id)
+            item.bought = not item.bought
+            item.save()
+
     context = {}
-    plan = Plan.objects.get(plan_id=id)
+    plan = Plan.objects.get(plan_id=plan_id)
     context["plan"] = plan
+    context["items"] = Item.objects.filter(plan_id=plan_id)
     context["create_item"] = ItemForm()
+    context["planner_id"] = planner_id
     return render(request, 'planner/plan.html', context)
 
+
+def plan_delete(request, planner_id, plan_id):
+    plan = Plan.objects.get(plan_id=plan_id)
+    plan.delete()
+    return redirect('plans', id=planner_id)
+
+
 @login_required
-def add_item(request, id):
-    return redirect('plan', id=id)
+def add_item(request, planner_id, plan_id):
+    if request.method == 'POST':
+        item_form = ItemForm(request.POST)
+        if item_form.is_valid():
+            name = item_form.cleaned_data['name']
+            quantity = item_form.cleaned_data['quantity']
+            plan = Plan.objects.get(plan_id=plan_id)
+            item = Item(plan_id=plan, name=name, quantity=quantity)
+            item.save()
+        else:
+            print(item_form.errors)
+    return redirect('plan', planner_id=planner_id, plan_id=plan_id)

@@ -6,7 +6,7 @@
             <h1 class="login-heading mb-4 my-auto">Add Goal</h1>
             <form action="{% url 'add_goal' %}" method="post" class="mt-3">{% csrf_token %}
                <div class="form-label-group">
-                    {% render_field goal_form.title class="form-control" value="title" %}
+                    {% render_field goal_form.title class="form-control"%}
                     <label>Title:</label>
                     {{ goal_form.title.errors }}
                </div>

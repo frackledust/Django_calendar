@@ -116,4 +116,10 @@ class PlanCreateForm(forms.ModelForm):
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        exclude = []
+        exclude = ['plan_id']
+
+
+class CheckBoxForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        exclude = ['plan_id']

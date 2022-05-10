@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import Event, Mission, Category, Goal
-from .forms import MissionForm, GoalForm
+from .forms import MissionForm, GoalForm, CategoryForm
 from django.views.generic import UpdateView
 
 
@@ -68,3 +68,29 @@ def check_goal(request, id):
     goal.done = True
     goal.save()
     return redirect('goals')
+
+
+def category(request):
+    context = {}
+    context['category_form'] = CategoryForm()
+    print(context)
+    return render(request, 'account/category.html', context)
+
+
+def add_category(request):
+    context = {}
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            urgency_level = form.cleaned_data['urgency_level']
+            category = Category.objects.filter(name=name).first()
+            if category is None:
+                category = Category(name=name, urgency_level=urgency_level)
+            category.save()
+            return redirect('goals')
+        else:
+            context['category_form'] = form
+    else:
+        context['category_form'] = CategoryForm()
+    return render(request, 'account/category.html', context)
