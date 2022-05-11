@@ -1,11 +1,6 @@
 from django import forms
 from .models import Mission, Goal, Category
-
-
-class MissionForm(forms.ModelForm):
-    class Meta:
-        model = Mission
-        exclude = ['event','done']
+from user.models import MyUser
 
 
 class GoalForm(forms.ModelForm):

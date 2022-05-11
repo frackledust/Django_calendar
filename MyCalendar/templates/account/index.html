@@ -1,9 +1,0 @@
-<html>
-    <body>
-        <h1> Events 2: </h1>
-        {% for event in events %}
-            <h2><a href="{% url 'event' event.id %}">
-                {{event.date | date:"d/m/Y"}} - {{event.name}} </a></h2>
-        {% endfor %}
-    </body>
-</html>

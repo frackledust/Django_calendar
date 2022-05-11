@@ -40,7 +40,7 @@ class PlannerForm(forms.ModelForm):
 
 
 def get_planners(user_id):
-    planners = Planner.objects.filter(Q(owner=user_id) | Q(editable_by=user_id))
+    planners = Planner.objects.filter(Q(owner=user_id) | Q(editable_by=user_id)).distinct()
     choices = []
 
     for planner in planners:

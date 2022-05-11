@@ -51,8 +51,8 @@ def homeView(request):
             else:
                 createPlanForm = form
 
-    queryset_visible = Planner.objects.filter(Q(owner=request.user.pk) | Q(visible_for=request.user))
-    queryset_editable = Planner.objects.filter(Q(owner=request.user.pk) | Q(editable_by=request.user))
+    queryset_visible = Planner.objects.filter(Q(owner=request.user.pk) | Q(visible_for=request.user)).distinct()
+    queryset_editable = Planner.objects.filter(Q(owner=request.user.pk) | Q(editable_by=request.user)).distinct()
 
     context["planners"] = PlannerSerializer(queryset_editable, many=True).data
     context["visible_planners"] = queryset_visible
@@ -74,11 +74,6 @@ def homeView(request):
 def plansView(request, id):
     context = {}
 
-    if request.POST:
-        if request.POST['delete']:
-            print(request.POST['delete'])
-            print(type(request.POST['delete']))
-
     planner = Planner.objects.get(planner_id=id)
     context["plans"] = planner.plan_set.order_by('start_date')
     context["planner_id"] = id
@@ -89,7 +84,6 @@ def planView(request, planner_id, plan_id):
     if request.POST:
         if 'item_id' in request.POST:
             item_id = request.POST['item_id']
-            print(item_id)
             item = Item.objects.get(item_id=item_id)
             item.bought = not item.bought
             item.save()
@@ -103,6 +97,7 @@ def planView(request, planner_id, plan_id):
     return render(request, 'planner/plan.html', context)
 
 
+@login_required
 def plan_delete(request, planner_id, plan_id):
     plan = Plan.objects.get(plan_id=plan_id)
     plan.delete()

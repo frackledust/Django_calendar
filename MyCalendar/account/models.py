@@ -3,6 +3,7 @@ from django.db import models
 from user.models import MyUser
 
 
+# not used
 class Event(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -19,7 +20,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-
+# not used
 class Mission(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     text = models.CharField(max_length=500)

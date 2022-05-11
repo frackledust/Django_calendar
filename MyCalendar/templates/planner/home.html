@@ -65,7 +65,7 @@
 
         <h2>Menu</h2>
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="#">Profil</a>
+            <a href="{% url 'profil' %}">Profil</a>
             <a href="{% url 'goals' %}">Goals</a>
             <a href="{% url 'logout' %}">Log out</a>
         </div>
@@ -138,10 +138,6 @@
                                             <label for="id_end_date">End:</label>
                                             {{ plan_createform.end_date.errors }}
                                         </div>
-<!--                                            <div class="form-label-group">-->
-<!--                                            {% render_field plan_createform.event_type class="form-control" %}-->
-<!--                                            {{ plan_createform.event_type.errors }}-->
-<!--                                        </div>-->
 
                                         <button class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit" name="action" value="create_plan">Let's do it!</button>
                                         </form>

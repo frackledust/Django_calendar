@@ -1,0 +1,31 @@
+<!--Not used, for future reference, for using iframe -->
+<h4>Make plan</h4>
+<form method="post" class="mt-3">
+{% csrf_token %}
+<div class="form-label-group">
+    {% render_field plan_createform.planner class="form-control" id="id_planner_plan" %}
+    {{ plan_createform.planner.errors }}
+</div>
+<div class="form-label-group">
+    {% render_field plan_createform.name class="form-control" id="id_name_plan" %}
+    <label for="id_name_plan">Name of the Plan:</label>
+    {{ plan_createform.name.errors }}
+</div>
+    <div class="form-label-group">
+    {% render_field plan_createform.start_date class="form-control" type="datetime-local" %}
+    <label for="id_start_date">Begin:</label>
+    {{ plan_createform.start_date.errors }}
+</div>
+    <div class="form-label-group">
+    {% render_field plan_createform.end_date class="form-control" type="datetime-local" %}
+    <label for="id_end_date">End:</label>
+    {{ plan_createform.end_date.errors }}
+</div>
+
+<button class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit" name="action" value="create_plan">Let's do it!</button>
+</form>
+{% if selected_planner %}
+<a href="{% url 'plans' selected_planner %}">
+<button class="btn btn-lg btn-outline-secondary btn-block btn-login text-uppercase font-weight-bold mb-2">Show plans in list</button>
+</a>
+{% endif %}

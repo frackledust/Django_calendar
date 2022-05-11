@@ -1,46 +1,25 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
-from .models import Event, Mission, Category, Goal
-from .forms import MissionForm, GoalForm, CategoryForm
-from django.views.generic import UpdateView
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .models import Category, Goal
+from .forms import GoalForm, CategoryForm
 
 
-def index(request):
-    events = Event.objects.all()
-    return render(request, 'account/index.html', {'events': events})
+@login_required
+def profilView(request):
+    context = {'user': request.user}
+    return render(request, 'account/profil.html', context)
 
 
-def event(request, id):
-    event = get_object_or_404(Event, pk=id)
-    missions = Mission.objects.filter(event=event)
-
-    mission_form = MissionForm()
-
-    return render(request, 'account/event.html', {'event': event, 'missions': missions, 'mission_form': mission_form})
-
-
-def add_mission(request, id):
-    event = get_object_or_404(Event, pk=id)
-    if request.method == 'POST':
-        mission_form = MissionForm(request.POST)
-        if mission_form.is_valid():
-            text = mission_form.cleaned_data['text']
-            category = mission_form.cleaned_data['category']
-            mission = Mission(event=event, text=text, category=category)
-            mission.save()
-    return redirect('event', id=id)
-
-
+@login_required
 def goalsView(request):
-    context = {}
-    context['goals'] = Goal.objects.filter(owner=request.user)
+    context = {'goals': Goal.objects.filter(owner=request.user)}
 
     return render(request, 'account/goals.html', context)
 
 
+@login_required
 def goalFormView(request):
-    context = {}
-    context['goal_form'] = GoalForm()
+    context = {'goal_form': GoalForm()}
     if "goal" in request.GET:
         goal = Goal.objects.filter(goal_id=request.GET['goal']).first()
         info = {'title': goal.title, 'description': goal.description, 'category': goal.category}
@@ -49,6 +28,7 @@ def goalFormView(request):
     return render(request, 'account/goal_form.html', context)
 
 
+@login_required
 def add_goal(request):
     if request.method == 'POST':
         goal_form = GoalForm(request.POST)
@@ -63,6 +43,7 @@ def add_goal(request):
     return redirect('goals')
 
 
+@login_required
 def check_goal(request, id):
     goal = Goal.objects.filter(goal_id=id).first()
     goal.done = True
@@ -70,13 +51,13 @@ def check_goal(request, id):
     return redirect('goals')
 
 
+@login_required
 def category(request):
-    context = {}
-    context['category_form'] = CategoryForm()
+    context = {'category_form': CategoryForm()}
     print(context)
     return render(request, 'account/category.html', context)
 
-
+@login_required
 def add_category(request):
     context = {}
     if request.method == 'POST':

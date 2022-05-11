@@ -1,0 +1,41 @@
+{% extends 'base.html' %} {% load widget_tweaks %} {% block content %}
+<br/>
+<div class="container">
+    <div class="row">
+        <div class="float-left col-mb-2">
+            <br/>
+            <h1 class="login-heading mb-5 my-auto"> > Profil </h1>
+            <br/>
+            <h3>
+                <a href="{% url 'home' %}" class="login-heading ml-1 my-auto"> << back </a>
+            </h3>
+        </div>
+        <div class="col ml-5">
+<!--            <h1 class="login-heading mb-4 my-auto">User Profil</h1>-->
+            <br>
+            {% if user %}
+            <div class="card" style="width: 18rem;">
+                    {% if user.profile_img %}
+                  <img src="{{ user.profile_img.url}}" alt="connect" style="max-height:300px">
+                    {% endif %}
+                  <div class="card-body">
+                    <h5 class="card-title">User info</h5>
+                  </div>
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Username: {{user.nick_name}}</li>
+                    <li class="list-group-item">Email: {{user.email}}</li>
+                    <li class="list-group-item">Staff: {{user.is_staff}}</li>
+                  </ul>
+                  <div class="card-body">
+                      <a href="{% url 'password_change' %}">
+                          <button class="btn btn-lg btn-outline-primary btn-block btn-login text-uppercase font-weight-bold mb-2">Change password</button>
+                      </a>
+                  </div>
+            </div>
+            {% endif %}
+        </div>
+
+
+    </div>
+</div>
+{% endblock content %}
